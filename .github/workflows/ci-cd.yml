@@ -1,80 +1,59 @@
-name: Backend CI/CD
-
-on:
-  push:
-    branches:
-      - main
-
+name: Actividad DAW
+on: push
 jobs:
-  # Job 1: Ejecutar tests y Lint
-  test-and-lint:
-    runs-on: ubuntu-latest
-    steps:
-      # Configuración inicial
-      - name: Checkout code
-        uses: actions/checkout@v3
+    test-and-lint:
+       runs-on: ubuntu-latest
+       steps:
+          - 
+            name: Copiar código
+            uses: actions/checkout@v4
+          - 
+            name:  Ejecutar requerimientos
+            run: pip install -r requirements.txt
+          - 
+            name: Ejecutart tests
+            run: pytest
+          -
+            name: Lint
+            run: ruff check .
 
-      # Configurar Python
-      - name: Set up Python
-        uses: actions/setup-python@v4
-        with:
-          python-version: "3.10"
-
-      # Instalar dependencias
-      - name: Install dependencies
-        run: |
-          python -m pip install --upgrade pip
-          pip install httpx fastapi pytest ruff
-
-      # Ejecutar Pytest
-      - name: Run Pytest
-        run: pytest test/
-
-      # Ejecutar Lint (Ruff)
-      - name: Run Ruff Lint
-        run: ruff check --fix
-
-  # Job 2: Build y Push a DockerHub
-  dockerhub:
-    needs: test-and-lint
-    runs-on: ubuntu-latest
-    steps:
-      # Configuración inicial
-      - name: Checkout code
-        uses: actions/checkout@v3
-
-      # Login a DockerHub
-      - name: Log in to DockerHub
-        uses: docker/login-action@v2
-        with:
-          username: ${{ secrets.DOCKER_USERNAME }}
-          password: ${{ secrets.DOCKER_PASSWORD }}
-
-      # Build y Push
-      - name: Build and Push Docker image
-        run: |
-          docker build -t ${{ secrets.DOCKER_USERNAME }}/backend-app:latest .
-          docker push ${{ secrets.DOCKER_USERNAME }}/backend-app:latest
-
-  # Job 3: Build y Push a GitHub Actions
-  github-container-registry:
-    needs: test-and-lint
-    runs-on: ubuntu-latest
-    steps:
-      # Configuración inicial
-      - name: Checkout code
-        uses: actions/checkout@v3
-
-      # Login a GitHub Container Registry
-      - name: Log in to GitHub Container Registry
+    buildear-imagen-docker:
+      runs-on: ubuntu-latest
+      steps:
+       -
+        name: Copiar código
+        uses: actions/checkout@v4
+       - 
+        name: Login en Docker Hub
         uses: docker/login-action@v3
         with:
-          registry: ghcr.io
-          username: ${{ github.actor }}
-          password: ${{ secrets.CD_TOKEN }}
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+       -
+        name: Build y push
+        uses: docker/build-push-action@v6
+        with:
+          push: true
+          tags: fruizotero/calculadora-back-daw:latest
 
-      # Build y Push
-      - name: Build and Push Docker image to GitHub Container Registry
-        run: |
-          docker build -t ghcr.io/lenvigo/back-calculadora-template:latest .
-          docker push ghcr.io/lenvigo/back-calculadora-template:latest
+    build-and-push-github-package:
+      runs-on: ubuntu-latest
+      steps:
+        - 
+          name: Copiar código
+          uses: actions/checkout@v4
+        -
+          name: Login en GitHub Container Registry
+          uses: docker/login-action@v3
+          with:
+            registry: ghcr.io
+            username: ${{ github.actor }}
+            password: ${{ secrets.DAW_CALCULADORA_TOKEN }}
+        -
+          name: Build image y pushear a Github Packages
+          uses: docker/build-push-action@v6
+          with:
+            push: true
+            tags: ghcr.io/fruizotero/back-calculadora-template:latest
+          
+    
