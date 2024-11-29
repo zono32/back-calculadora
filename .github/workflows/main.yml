@@ -19,7 +19,7 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
-          python-version: 3.1  # Ajusta según tu versión
+          python-version: 3.9  # Ajusta según tu versión
 
       - name: Install dependencies
         run: |
