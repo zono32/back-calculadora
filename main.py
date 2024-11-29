@@ -1,7 +1,5 @@
-from urllib.request import Request
-
+from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi import FastAPI
 from calculadora import Calculadora
 
 app = FastAPI()
@@ -34,4 +32,6 @@ async def multiplicar(num1: int, num2: int):
 
 @app.get("/dividir/")
 async def dividir(num1: int, num2: int):
+    if num2 == 0:
+        raise HTTPException(status_code=400, detail="No se puede dividir entre cero")
     return {"resultado": calc.dividir(num1, num2)}
