@@ -48,7 +48,7 @@ jobs:
           with:
             registry: ghcr.io
             username: ${{ github.actor }}
-            password: ${{ secrets.ZONO32 }}
+            password: ${{ secrets.TOKGITKIN }}
         -
           name: Build image y pushear a Github Packages
           uses: docker/build-push-action@v6
