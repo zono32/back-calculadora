@@ -34,7 +34,7 @@ jobs:
         uses: docker/build-push-action@v6
         with:
           push: true
-          tags: fruizotero/calculadora-back-daw:latest
+          tags: zono32/calculadora-backend:latest
 
     build-and-push-github-package:
       runs-on: ubuntu-latest
@@ -54,6 +54,6 @@ jobs:
           uses: docker/build-push-action@v6
           with:
             push: true
-            tags: ghcr.io/fruizotero/back-calculadora-template:latest
+            tags: ghcr.io/zono32/back-calculadora:latest
           
     
