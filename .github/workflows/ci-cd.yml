@@ -27,8 +27,8 @@ jobs:
         name: Login en Docker Hub
         uses: docker/login-action@v3
         with:
-          username: ${{ secrets.DOCKERHUB_USERNAME }}
-          password: ${{ secrets.DOCKERHUB_TOKEN }}
+          username: ${{ secrets.zono32 }}
+          password: ${{ secrets.DOCKERHUBTOKEN }}
        -
         name: Build y push
         uses: docker/build-push-action@v6
@@ -48,7 +48,7 @@ jobs:
           with:
             registry: ghcr.io
             username: ${{ github.actor }}
-            password: ${{ secrets.DAW_CALCULADORA_TOKEN }}
+            password: ${{ secrets.ZONO32 }}
         -
           name: Build image y pushear a Github Packages
           uses: docker/build-push-action@v6
